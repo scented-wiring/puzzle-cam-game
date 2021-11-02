@@ -45,7 +45,14 @@ const handleResize = () => {
 };
 
 const updateCanvas = () => {
+  CONTEXT.clearRect(0, 0, CANVAS.width, CANVAS.height);
+
+  CONTEXT.globalAlpha = 0.5;
+
   CONTEXT.drawImage(VIDEO, SIZE.x, SIZE.y, SIZE.width, SIZE.height);
+
+  CONTEXT.globalAlpha = 1;
+
   for (let i = 0; i < PIECES.length; i++) {
     PIECES[i].draw(CONTEXT);
   }
@@ -61,6 +68,17 @@ const initialisePieces = (rows, cols) => {
     for (let j = 0; j < SIZE.columns; j++) {
       PIECES.push(new Piece(i, j));
     }
+  }
+};
+
+const randomisePieces = () => {
+  for (let i = 0; i < PIECES.length; i++) {
+    let loc = {
+      x: Math.random() * (CANVAS.width - PIECES[i].width),
+      y: Math.random() * (CANVAS.height - PIECES[i].height),
+    };
+    PIECES[i].x = loc.x;
+    PIECES[i].y = loc.y;
   }
 };
 
