@@ -4,10 +4,12 @@ let CONTEXT = null;
 let SCALER = 0.8;
 let SIZE = { x: 0, y: 0, width: 0, height: 0, rows: 3, columns: 3 };
 let PIECES = [];
+let SELECTED_PIECE = null;
 
 const main = () => {
   CANVAS = document.getElementById("myCanvas");
   CONTEXT = CANVAS.getContext("2d");
+  addEventListeners();
 
   let promise = navigator.mediaDevices.getUserMedia({ video: true });
   promise
@@ -26,6 +28,47 @@ const main = () => {
     .catch(function (err) {
       alert("Camera error: " + err);
     });
+};
+
+const addEventListeners = () => {
+  CANVAS.addEventListener("mousedown", onMouseDown);
+  CANVAS.addEventListener("mousemove", onMouseMove);
+  CANVAS.addEventListener("mouseup", onMouseUp);
+};
+
+const onMouseDown = (evt) => {
+  SELECTED_PIECE = getPressedPiece(evt);
+  if (SELECTED_PIECE != null) {
+    SELECTED_PIECE.offset = {
+      x: evt.x - SELECTED_PIECE.x,
+      y: evt.y - SELECTED_PIECE.y,
+    };
+  }
+};
+
+const onMouseMove = (evt) => {
+  if (SELECTED_PIECE != null) {
+    SELECTED_PIECE.x = evt.x - SELECTED_PIECE.offset.x;
+    SELECTED_PIECE.y = evt.y - SELECTED_PIECE.offset.y;
+  }
+};
+
+const onMouseUp = (evt) => {
+  //To-do
+};
+
+const getPressedPiece = (loc) => {
+  for (let i = 0; i < PIECES.length; i++) {
+    if (
+      loc.x > PIECES[i].x &&
+      loc.x < PIECES[i].x + PIECES[i].width &&
+      loc.y > PIECES[i].y &&
+      loc.y < PIECES[i].y + PIECES[i].height
+    ) {
+      return PIECES[i];
+    }
+  }
+  return null;
 };
 
 const handleResize = () => {
