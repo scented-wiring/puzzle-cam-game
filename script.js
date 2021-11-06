@@ -34,6 +34,23 @@ const addEventListeners = () => {
   CANVAS.addEventListener("mousedown", onMouseDown);
   CANVAS.addEventListener("mousemove", onMouseMove);
   CANVAS.addEventListener("mouseup", onMouseUp);
+  CANVAS.addEventListener("touchstart", onTouchStart);
+  CANVAS.addEventListener("touchmove", onTouchMove);
+  CANVAS.addEventListener("touchend", onTouchEnd);
+};
+
+const onTouchStart = (evt) => {
+  let loc = { x: evt.touches[0].clientX, y: evt.touches[0].clientY };
+  onMouseDown(loc);
+};
+
+const onTouchMove = (evt) => {
+  let loc = { x: evt.touches[0].clientX, y: evt.touches[0].clientY };
+  onMouseMove(loc);
+};
+
+const onTouchEnd = () => {
+  onMouseUp();
 };
 
 const onMouseDown = (evt) => {
@@ -58,7 +75,7 @@ const onMouseMove = (evt) => {
   }
 };
 
-const onMouseUp = (evt) => {
+const onMouseUp = () => {
   if (SELECTED_PIECE.isClose()) {
     SELECTED_PIECE.snap();
   }
